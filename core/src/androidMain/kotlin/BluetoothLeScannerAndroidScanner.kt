@@ -37,7 +37,7 @@ internal class BluetoothLeScannerAndroidScanner(
 
         val callback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
-                trySendBlocking(ScanResultAndroidAdvertisement(result))
+                trySend(ScanResultAndroidAdvertisement(result))
                     .onFailure {
                         logger.warn { message = "Unable to deliver scan result due to failure in flow or premature closing." }
                     }
@@ -47,7 +47,7 @@ internal class BluetoothLeScannerAndroidScanner(
             override fun onBatchScanResults(results: MutableList<ScanResult>) {
                 runCatching {
                     results.forEach {
-                        trySendBlocking(ScanResultAndroidAdvertisement(it)).getOrThrow()
+                        trySend(ScanResultAndroidAdvertisement(it)).getOrThrow()
                     }
                 }.onFailure {
                     logger.warn { message = "Unable to deliver batch scan results due to failure in flow or premature closing." }
